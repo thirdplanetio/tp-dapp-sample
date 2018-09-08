@@ -5,63 +5,38 @@ pragma solidity ^0.4.24;
 
 contract LetsMeet {
     event LetsMeetEvent(
-      string _message
+        string _message
     );
 
-    struct LetsMeetProposal {
-      uint256 id;
-      /*
-      address owner;
-      string title;
-      string what;
-      string when; */
-
-      uint8 yayVotes;
-      uint8 nayVotes;
-    }
-
-    uint public totalProposals;
-    LetsMeetProposal[10] public proposals;
-    mapping(uint => uint[]) public counters;
+    address[] proposals;
     mapping(address => uint) public ownerProposalCounts;
 
-    /* constructor() public {
-    } */
-
-    function getProposalCount(address _owner) public view returns (uint) {
-        return ownerProposalCounts[_owner];
+    function getProposalCount() public view returns (uint) {
+        return ownerProposalCounts[msg.sender];
     }
 
-    function newProposal(address _owner, string _title, string _what, string _when) public returns (uint256 proposalId) {
-        uint256 nextId = proposals.length;
-//        proposals.push(LetsMeetProposal({id: proposalId, owner: _owner, title:_title, what: _what, when: _when, yayVotes: 0, nayVotes: 0}));
-//        proposals.push(LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0}));
-//        LetsMeetProposal memory _proposal = LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0});
-        // proposals.push(_proposal);
-        proposals[0] = LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0});
-        ownerProposalCounts[_owner] += 1;
+    function newProposal(string _title, string _what, string _when) public returns (address) {
+        LetsMeetProposal proposal = new LetsMeetProposal(msg.sender, _title, _what, _when);
+        proposals.push(proposal);
 
-        totalProposals += 1;
+        ownerProposalCounts[msg.sender] += 1;
 
-        emit LetsMeetEvent("proposal created!");
-        return nextId;
+        return address(proposal);
     }
-/*
-    function counterProposal(address _owner, uint proposalId, string _title, string _what, string _when) public returns (uint counterId) {
-        uint nextId = proposals.length;
 
-        proposals.push(LetsMeetProposal({id: nextId, owner: _owner, yayVotes: 1, nayVotes: 0}));
-        counters[proposalId].push(nextId);
+    function counterProposal(address _proposal, string _title, string _what, string _when) public returns (address) {
+        LetsMeetProposal counter = new LetsMeetProposal(msg.sender, _title, _what, _when);
+        LetsMeetProposal proposal = LetsMeetProposal(_proposal);
+        proposal.counter(address(counter));
 
-        ownerProposalCounts[_owner] = ownerProposalCounts[_owner] + 1;
+        ownerProposalCounts[msg.sender] += 1;
 
-        return nextId;
+        return address(counter);
     }
-*/
+
     /** recursively searches the best proposal rooted at this proposal */
-/*
     function bestProposal(address _proposal) public returns(address) {
-        LetsMeetProposal storage proposal = LetsMeetProposal(_proposal);
+        LetsMeetProposal proposal = LetsMeetProposal(_proposal);
         uint numCounters = proposal.getNumCounters();
         uint myScore = proposal.getScore();
 
@@ -94,9 +69,9 @@ contract LetsMeet {
             return bestCounter;
         }
     }
-    */
 }
-/*
+
+
 contract LetsMeetProposal {
     string title;
     string what;
@@ -107,13 +82,13 @@ contract LetsMeetProposal {
     address[] yayVotes;
     address[] nayVotes;
 
-    function LetsMeetProposal(address _owner, string _title, string _what, string _when) public {
-//        title = _title;
-//        owner = _owner;
-//        what = _what;
-//        when = _when;
+    constructor(address _owner, string _title, string _what, string _when) public {
+        owner = _owner;
+        title = _title;
+        what = _what;
+        when = _when;
 
- //        yayVotes.push(_owner);
+        yayVotes.push(_owner);
     }
 
     function setTitle(string _title) public {
@@ -144,8 +119,8 @@ contract LetsMeetProposal {
         return counters.length;
     }
 
+    /** score = yay - nay - counter */
     function getScore() public constant returns (uint) {
         return yayVotes.length - nayVotes.length - counters.length;
     }
 }
-*/
