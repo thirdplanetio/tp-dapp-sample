@@ -9,31 +9,36 @@ contract LetsMeet {
     );
 
     struct LetsMeetProposal {
-      uint id;
+      uint256 id;
       /*
       address owner;
       string title;
       string what;
       string when; */
 
-      uint yayVotes;
-      uint nayVotes;
+      uint8 yayVotes;
+      uint8 nayVotes;
     }
 
     uint public totalProposals;
-    LetsMeetProposal[] public proposals;
+    LetsMeetProposal[10] public proposals;
     mapping(uint => uint[]) public counters;
     mapping(address => uint) public ownerProposalCounts;
 
+    /* constructor() public {
+    } */
 
     function getProposalCount(address _owner) public view returns (uint) {
         return ownerProposalCounts[_owner];
     }
 
-    function newProposal(address _owner, string _title, string _what, string _when) public returns (uint proposalId) {
-        uint nextId = proposals.length;
+    function newProposal(address _owner, string _title, string _what, string _when) public returns (uint256 proposalId) {
+        uint256 nextId = proposals.length;
 //        proposals.push(LetsMeetProposal({id: proposalId, owner: _owner, title:_title, what: _what, when: _when, yayVotes: 0, nayVotes: 0}));
 //        proposals.push(LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0}));
+//        LetsMeetProposal memory _proposal = LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0});
+        // proposals.push(_proposal);
+        proposals[0] = LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0});
         ownerProposalCounts[_owner] += 1;
 
         totalProposals += 1;

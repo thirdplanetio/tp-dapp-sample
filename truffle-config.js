@@ -4,7 +4,9 @@ module.exports = {
     development: {
       host: "localhost",
       port: 8545,
-      network_id: "*" // Match any network id
+      network_id: "*", // Match any network id
+      gas: 8000000,
+      gasPrice: 6000000000
     }
   },
   solc: {
@@ -12,5 +14,5 @@ module.exports = {
       enabled: true,
       runs: 500
     }
-  } 
+  }
 };

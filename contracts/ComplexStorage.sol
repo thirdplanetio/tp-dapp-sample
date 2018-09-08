@@ -14,6 +14,8 @@ contract ComplexStorage {
 	mapping (address => uint) uints1;
 	mapping (address => DeviceData) structs1;
 
+	DeviceData[] public datas;
+
 	uint[] public uintarray;
 	DeviceData[] public deviceDataArray;
     DeviceData public singleDD;
@@ -40,5 +42,18 @@ contract ComplexStorage {
 
 		deviceDataArray.push(structs1[address1]);
 		deviceDataArray.push(structs1[address2]);
+	}
+
+	function foo() public {
+		/* address address1 = 0x741370c06776D738CD9a2BB97a217eefa621700c;
+		structs1[address1] = DeviceData("deviceBrandFoo", "deviceYearFoo", "wearLevelFoo");		 */
+//		singleDD = DeviceData("deviceBrandFoo", "deviceYearFoo", "wearLevelFoo");
+
+		string1 = "changed";
+		string2 = "also changed";
+
+		DeviceData memory d1 = DeviceData("deviceBrandHey", "deviceYearHey", "wearLevelHey");
+		datas.push(d1);
+
 	}
 }
