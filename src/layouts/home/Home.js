@@ -23,12 +23,11 @@ class Home extends Component {
           </div>
 
           <div className="pure-u-1-1">
-            <h2>Let&apos;s Meet</h2>
+            <h2>Let&apos;s Meet App</h2>
             <p>This shows a simple ContractData component with no arguments, along with a form to set its value.</p>
             <p><strong>Stored Value</strong>: <ContractData contract="LetsMeet" method="getProposalCount" /></p>
             <ContractForm contract="LetsMeet" method="newProposal" sendArgs={{gas: 500000, gasPrice: '8000000000'}} />
-
-            <br/><br/>
+            <p><strong>Last Proposal</strong>: <ContractData contract="LetsMeet" method="lastProposal" /></p>
           </div>
 
           <div className="pure-u-1-1">
