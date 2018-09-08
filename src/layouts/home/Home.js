@@ -23,6 +23,15 @@ class Home extends Component {
           </div>
 
           <div className="pure-u-1-1">
+            <h2>Let&apos;s Meet</h2>
+            <p>This shows a simple ContractData component with no arguments, along with a form to set its value.</p>
+            <p><strong>Stored Value</strong>: <ContractData contract="LetsMeet" method="totalProposals" /></p>
+            <ContractForm contract="LetsMeet" method="newProposal" />
+
+            <br/><br/>
+          </div>
+
+          <div className="pure-u-1-1">
             <h2>SimpleStorage</h2>
             <p>This shows a simple ContractData component with no arguments, along with a form to set its value.</p>
             <p><strong>Stored Value</strong>: <ContractData contract="SimpleStorage" method="storedData" /></p>
