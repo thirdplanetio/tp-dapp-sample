@@ -25,7 +25,7 @@ class Home extends Component {
           <div className="pure-u-1-1">
             <h2>Let&apos;s Meet</h2>
             <p>This shows a simple ContractData component with no arguments, along with a form to set its value.</p>
-            <p><strong>Stored Value</strong>: <ContractData contract="LetsMeet" method="totalProposals" /></p>
+            <p><strong>Stored Value</strong>: <ContractData contract="LetsMeet" method="getProposalCount" /></p>
             <ContractForm contract="LetsMeet" method="newProposal" sendArgs={{gas: 500000, gasPrice: '8000000000'}} />
 
             <br/><br/>
@@ -59,15 +59,6 @@ class Home extends Component {
             <strong>Single Device Data</strong>: <ContractData contract="ComplexStorage" method="singleDD" />
             <br/><br/>
           </div>
-
-          <div className="pure-u-1-1">
-            <h2>ComplexStorage call foo</h2>
-            <p>Adds a new record</p>
-            <ContractForm contract="ComplexStorage" method="foo" sendArgs={{gas: 500000, gasPrice: '8000000000'}} />
-
-            <br/><br/>
-          </div>
-
         </div>
       </main>
     )
