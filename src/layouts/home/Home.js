@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-// https://github.com/trufflesuite/drizzle-react-components/tree/master/src
 import { AccountData, ContractData, ContractForm } from 'drizzle-react-components'
-// import { ProposalContractForm } from './MyContractForm.js'
 import logo from '../../logo.png'
 
 class Home extends Component {
