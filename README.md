@@ -4,7 +4,7 @@ Sample dApp front end using the [Drizzle Framework](https://truffleframework.com
 
 # Prerequisites
 
-* npm `v5.6.0`
+* npm
 
 Follow [installation instructions](https://www.npmjs.com/get-npm) for your OS.
 
@@ -19,6 +19,18 @@ Then, for best practice purposes, update your `node` global installation prefix
 
       npm install -g truffle
       npm install -g ganache-cli
+
+## Check versions
+
+    $ truffle version
+    Truffle v4.1.13 (core: 4.1.13)
+    Solidity v0.4.24 (solc-js)
+
+    $ ganache-cli --version
+    Ganache CLI v6.1.7 (ganache-core: 2.2.0)
+
+    $ npm --version
+    5.6.0
 
 # Dev Setup
 
