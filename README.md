@@ -4,13 +4,21 @@ Sample dApp front end using the [Drizzle Framework](https://truffleframework.com
 
 # Prerequisites
 
-* npm
+* npm `v5.6.0`
+
+Follow [installation instructions](https://www.npmjs.com/get-npm) for your OS.
+
+Then, for best practice purposes, update your `node` global installation prefix
+
+      npm config set prefix ~/node
+      export PATH=./node_modules/.bin:~/node/bin:$PATH
+
+      echo './node_modules/.bin:~/node/bin:$PATH' >> ~/.bashrc
+
+* ethereum tools      
 
       npm install -g truffle
       npm install -g ganache-cli
-
-      npm config set prefix ~/bin
-      export PATH=./node_modules/.bin:~/bin:~/.local/bin:~/node/bin:$HOME/.gem/ruby/2.3.0/bin:~/usr/bin:$PATH
 
 # Dev Setup
 
