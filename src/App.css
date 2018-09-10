@@ -3,6 +3,10 @@
 body,
 .pure-g [class*=pure-u] {
   font-family: 'Open Sans', sans-serif;
+  /* background-image: url("background.jpg");
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-attachment: fixed; */
 }
 
 .header {
