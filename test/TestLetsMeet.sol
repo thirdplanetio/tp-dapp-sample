@@ -60,7 +60,7 @@ contract TestLetsMeet {
     LetsMeet inst = LetsMeet(DeployedAddresses.LetsMeet());
 
     uint256 proposalId = inst.newProposal("my what", "my when");
-    uint256 counterId = inst.counterProposal(proposalId, "my counter what", "my counter when");
+    inst.counterProposal(proposalId, "my counter what", "my counter when");
 
     inst.voteYes(proposalId);
 
