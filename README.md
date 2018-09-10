@@ -77,7 +77,7 @@ restart the front end webserver.
 
 The browser should refresh automatically.
 
-## Troubleshooting
+# Troubleshooting
 
 * Error: Attempting to run transaction which calls a contract function
 
@@ -90,6 +90,16 @@ The browser should refresh automatically.
 
   * increase `gas` in `<ContractForm ... sendArgs={{gas: 200000, gasPrice: '8000000000'}/>`
   * or possible need to increase `gasPrice` if it is less than the `gas` setting for `ganache`
+
+# TODO
+
+* update UI to invoke voting methods
+
+* update UI to show counter proposals
+
+* update UI to show best proposal
+
+* add voting deadline capability
 
 # References
 
