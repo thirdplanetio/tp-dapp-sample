@@ -32,9 +32,7 @@ Then, for best practice purposes, update your `node` global installation prefix
     $ npm --version
     5.6.0
 
-# Dev Setup
-
-# General Development Workflow
+# Typical Development Workflow
 
 ## Start ganache
 
@@ -55,15 +53,17 @@ This is a local Ethereum client node.
     truffle(development> LetsMeet.deployed().then(function(instance){return instance.newProposal.call("what", "when");}).then(function(value){return value.toNumber()});
     truffle(development> LetsMeet.deployed().then(function(instance){return instance.getProposalCount.call();}).then(function(value){return value.toNumber()});
 
-## Start front end
+## Start front end webserver
 
 The following should open your web browser to http://localhost:3000/
 
     $ npm run start
 
-# Typical Steps when....
+# Dev Tips
 
 ## Modifying a Contract
+
+After modifying `contracts/*.sol`:
 
     truffle(development)> test
     truffle(development)> migrate
@@ -72,7 +72,10 @@ Browser should refresh automatically.
 
 ## Updating css/js
 
-Browser should refresh automatically.
+After modifying the frontend resources in `src/`, there is no need to
+restart the front end webserver.
+
+The browser should refresh automatically.
 
 ## Troubleshooting
 
