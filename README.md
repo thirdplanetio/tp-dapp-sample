@@ -6,11 +6,11 @@ Sample dApp front end using the [Drizzle Framework](https://truffleframework.com
 
 * npm
 
-    npm install -g truffle
-    npm install -g ganache-cli
+      npm install -g truffle
+      npm install -g ganache-cli
 
-    npm config set prefix ~/bin
-    export PATH=./node_modules/.bin:~/bin:~/.local/bin:~/node/bin:$HOME/.gem/ruby/2.3.0/bin:~/usr/bin:$PATH
+      npm config set prefix ~/bin
+      export PATH=./node_modules/.bin:~/bin:~/.local/bin:~/node/bin:$HOME/.gem/ruby/2.3.0/bin:~/usr/bin:$PATH
 
 # Dev Setup
 
