@@ -81,8 +81,8 @@ The browser should refresh automatically.
 
 * Error: Attempting to run transaction which calls a contract function
 
-  * stop ganache (CTRL-c)
-  * stop truffle (CTRL-d)
+  * stop ganache (`CTRL-c`)
+  * stop truffle (`CTRL-d`)
   * `rm -fr build`
   * start ganache, truffle
 
