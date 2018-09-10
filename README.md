@@ -2,6 +2,8 @@
 
 Sample dApp front end using the [Drizzle Framework](https://truffleframework.com/docs/drizzle/overview).
 
+Author: [Fairiz Azizi](https://github.com/coderfi)
+
 # Prerequisites
 
 ## npm
