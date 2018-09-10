@@ -14,138 +14,84 @@ contract TestLetsMeet {
     LetsMeet inst = LetsMeet(DeployedAddresses.LetsMeet());
 
     Assert.equal(inst.getProposalCount(), 0, "incorrect number of proposals");
-    address addr = inst.newProposal("my title", "my what", "my when");
-    LetsMeetProposal proposal = LetsMeetProposal(addr);
-
-    Assert.equal(proposal.getScore(), 1, "new proposal should get 1 vote");
-
+    uint256 proposalId = inst.newProposal("my what", "my when");
+    Assert.notEqual(proposalId, 0, "proposalId should not be 0");
+    Assert.equal(proposalId, 1, "proposalId should be 1");
     Assert.equal(inst.getProposalCount(), 1, "incorrect number of proposals");
-    Assert.notEqual(addr, 0, "should not be 0");
+    Assert.equal(inst.getScore(proposalId), 1, "new proposal should get 1 vote");
 
-    address best = inst.bestProposal(addr);
+    (uint256 best, uint score) = inst.bestProposal(proposalId);
     Assert.notEqual(best, 0, "should not be 0");
-    Assert.equal(addr, best, "brand new proposal should win by default");
+    Assert.equal(proposalId, best, "brand new proposal should win by default");
+    Assert.equal(score, 1, "score should be 1");
   }
 
   function testCounterBrandNewProposal() public {
     LetsMeet inst = LetsMeet(DeployedAddresses.LetsMeet());
 
-    address addr = inst.newProposal("my title", "my what", "my when");
-    LetsMeetProposal proposal = LetsMeetProposal(addr);
+    uint256 proposalId = inst.newProposal("my what", "my when");
 
-    Assert.equal(proposal.getNumCounters(), 0, "proposal should have no counters");
+    Assert.equal(inst.getNumCounters(proposalId), 0, "proposal should have no counters");
 
-    address addr2 = inst.counterProposal(addr, "my counter", "my counter what", "my counter when");
-    Assert.equal(proposal.getNumCounters(), 1, "proposal should have 1 counter");
-    Assert.notEqual(addr, addr2, "should not be equals");
+    uint256 counterId = inst.counterProposal(proposalId, "my counter what", "my counter when");
+    Assert.equal(inst.getNumCounters(proposalId), 1, "proposal should have 1 counter");
+    Assert.notEqual(proposalId, counterId, "should not be equals");
 
-    Assert.equal(proposal.getCounterAddress(0), addr2, "idx=0 address should be the counter");
-    Assert.equal(proposal.getCounterAddress(1), 0, "idx=1 address should be 0 (no such counter)");
+    Assert.equal(inst.getNumCounters(counterId), 0, "counter should have no counters");
 
-    LetsMeetProposal counter = LetsMeetProposal(addr2);
-    Assert.equal(counter.getNumCounters(), 0, "counter should have no counters");
+    Assert.equal(inst.getScore(counterId), 1, "new counter should get 1 vote");
+    Assert.equal(inst.getScore(proposalId), 0, "proposal vote should decrease by 1 vote");
 
-    Assert.equal(counter.getScore(), 1, "new counter should get 1 vote");
-    Assert.equal(proposal.getScore(), 0, "proposal vote should decrease by 1 vote");
+    uint256 best;
+    uint score;
 
-    address best;
-
-    best = inst.bestProposal(addr);
+    (best, score) = inst.bestProposal(proposalId);
     Assert.notEqual(best, 0, "should not be 0");
-    Assert.equal(addr2, best, "counter should win");
+    Assert.equal(counterId, best, "counter should win");
+    Assert.equal(score, 1, "score should be 1");
 
-    best = inst.bestProposal(addr2);
+    (best, score) = inst.bestProposal(counterId);
     Assert.notEqual(best, 0, "should not be 0");
-    Assert.equal(addr2, best, "counter should win when checking from the counter");
+    Assert.equal(counterId, best, "counter should win when checking from the counter");
+    Assert.equal(score, 1, "counter score should be 1");
   }
 
-  function testCounterBrandNewProposalVoteForCounter() public {
+  function testCounterBrandNewProposalVoteYesForProposal() public {
     LetsMeet inst = LetsMeet(DeployedAddresses.LetsMeet());
 
-    address addr = inst.newProposal("my title", "my what", "my when");
-    address addr2 = inst.counterProposal(addr, "my counter", "my counter what", "my counter when");
+    uint256 proposalId = inst.newProposal("my what", "my when");
+    uint256 counterId = inst.counterProposal(proposalId, "my counter what", "my counter when");
 
-    LetsMeetProposal proposal = LetsMeetProposal(addr);
-    LetsMeetProposal counter = LetsMeetProposal(addr2);
-    counter.accept();
+    inst.voteYes(proposalId);
 
-    Assert.equal(counter.getScore(), 2, "new counter should have 2 votes");
-    Assert.equal(proposal.getScore(), 0, "proposal vote should be at 0");
-
-    address best;
-
-    best = inst.bestProposal(addr);
-    Assert.equal(addr2, best, "counter should win");
-
-    best = inst.bestProposal(addr2);
-    Assert.equal(addr2, best, "counter should win when checking from the counter");
+    (uint256 best, uint score) = inst.bestProposal(proposalId);
+    Assert.equal(proposalId, best, "proposal should win by default");
+    Assert.equal(score, 1, "proposal score is correct");
   }
 
-  function testCounterBrandNewProposalVoteForCounterVoteForProposal() public {
+  function testCounterBrandNewProposalVoteYesForCounter() public {
     LetsMeet inst = LetsMeet(DeployedAddresses.LetsMeet());
 
-    address addr = inst.newProposal("my title", "my what", "my when");
-    address addr2 = inst.counterProposal(addr, "my counter", "my counter what", "my counter when");
+    uint256 proposalId = inst.newProposal("my what", "my when");
+    uint256 counterId = inst.counterProposal(proposalId, "my counter what", "my counter when");
 
-    LetsMeetProposal proposal = LetsMeetProposal(addr);
-    LetsMeetProposal counter = LetsMeetProposal(addr2);
+    inst.voteYes(counterId);
 
-    counter.accept();
-
-    Assert.equal(counter.getScore(), 2, "new counter should have 2 votes");
-    Assert.equal(proposal.getScore(), 0, "proposal vote should be at 0");
-
-    address best;
-
-    best = inst.bestProposal(addr);
-    Assert.equal(addr2, best, "counter should win");
-
-    proposal.accept();
-    best = inst.bestProposal(addr);
-    Assert.equal(proposal.getScore(), 1, "proposal vote should be at 0");
-    Assert.equal(addr2, best, "counter should win");
-
-    proposal.accept();
-    best = inst.bestProposal(addr);
-    Assert.equal(proposal.getScore(), 2, "proposal vote should be at 0");
-    Assert.equal(addr, best, "proposal should win");
-
-    best = inst.bestProposal(addr2);
-    Assert.equal(addr2, best, "counter should win when checking from the counter");
+    (uint256 best, uint score) = inst.bestProposal(proposalId);
+    Assert.equal(counterId, best, "counter should win");
+    Assert.equal(score, 2, "counter score is correct");
   }
 
-  function testCounterBrandNewProposalVoteForProposal() public {
+  function testCounterBrandNewProposalVoteNoForCounter() public {
     LetsMeet inst = LetsMeet(DeployedAddresses.LetsMeet());
 
-    address addr = inst.newProposal("my title", "my what", "my when");
+    uint256 proposalId = inst.newProposal("my what", "my when");
+    uint256 counterId = inst.counterProposal(proposalId, "my counter what", "my counter when");
 
-    LetsMeetProposal proposal = LetsMeetProposal(addr);
+    inst.voteNo(counterId);
 
-    Assert.equal(proposal.getScore(), 1, "proposal should have 1 vote");
-    proposal.accept();
-    Assert.equal(proposal.getScore(), 2, "proposal should have 2 votes");
-
-    address addr2 = inst.counterProposal(addr, "my counter", "my counter what", "my counter when");
-    LetsMeetProposal counter = LetsMeetProposal(addr2);
-    Assert.equal(proposal.getScore(), 1, "proposal should have 1 vote");
-    Assert.equal(counter.getScore(), 1, "counter vote should be at 1");
-
-    address best;
-
-    best = inst.bestProposal(addr);
-    Assert.equal(addr, best, "proposal should win");
-
-    best = inst.bestProposal(addr2);
-    Assert.equal(addr2, best, "counter should win when checking from the counter");
+    (uint256 best, uint score) = inst.bestProposal(proposalId);
+    Assert.equal(proposalId, best, "proposal should win by default");
+    Assert.equal(score, 0, "proposal score is correct");
   }
-
-  /*
-  function testInitialBalanceWithNewLetsMeet() public {
-    LetsMeet inst = new LetsMeet();
-
-    uint expected = 10000;
-
-    Assert.equal(meta.getBalance(msg.sender), expected, "Owner should have 10000 MetaCoin initially");
-  }
-  */
 }

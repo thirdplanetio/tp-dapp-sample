@@ -1,8 +1,5 @@
 pragma solidity ^0.4.24;
 
-// LetsMeet.deployed().then(function(instance){return instance.newProposal.call('0x627306090abab3a6e1400e9345bc60c78a8bef57', "title", "what", "when");}).then(function(value){return value});
-// LetsMeet.deployed().then(function(instance){return instance.getProposalCount.call('0x627306090abab3a6e1400e9345bc60c78a8bef57');}).then(function(value){return value.toNumber()});
-
 contract LetsMeet {
     event LetsMeetEvent(
       string _message
@@ -11,146 +8,102 @@ contract LetsMeet {
     struct LetsMeetProposal {
       uint256 id;
       address owner;
-      string title;
       string what;
       string when;
+      uint256[] counterIds;
 
       uint8 yayVotes;
       uint8 nayVotes;
     }
 
-    uint public totalProposals;
     LetsMeetProposal[] public proposals;
     LetsMeetProposal public lastProposal;
-    mapping(uint => uint[]) public counters;
-    mapping(address => uint) public ownerProposalCounts;
-
-    /* constructor() public {
-    } */
+    mapping(address => uint256[]) public byOwner;
 
     function getProposalCount() public view returns (uint) {
-        return ownerProposalCounts[msg.sender];
+        return byOwner[msg.sender].length;
     }
 
-    function newProposal(string _title, string _what, string _when) public returns (uint proposalId) {
-        uint nextId = proposals.length;
-//        proposals.push(LetsMeetProposal({id: proposalId, owner: _owner, title:_title, what: _what, when: _when, yayVotes: 0, nayVotes: 0}));
-//        proposals.push(LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0}));
-//        LetsMeetProposal memory _proposal = LetsMeetProposal({id: nextId, yayVotes: 1, nayVotes: 0});
-        // proposals.push(_proposal);
-        LetsMeetProposal memory proposal = LetsMeetProposal({
-            id: nextId, yayVotes: 1, nayVotes: 0,
-            owner: msg.sender,
-            title: _title, what: _what, when: _when});
-        proposals.push(proposal);
-        lastProposal = proposal;
-        ownerProposalCounts[msg.sender] += 1;
+    function newProposal(string _what, string _when) public returns (uint256 proposalId) {
+        proposalId = proposals.length + 1;
 
-        totalProposals += 1;
+        LetsMeetProposal memory proposal = LetsMeetProposal({
+            id: proposalId,
+            yayVotes: 1, nayVotes: 0,
+            owner: msg.sender,
+            what: _what, when: _when,
+            counterIds: new uint256[](0)});
+        proposals.push(proposal);
+        byOwner[msg.sender].push(proposalId);
+
+        lastProposal = proposal;
 
         emit LetsMeetEvent("proposal created!");
-        return nextId;
+        return proposalId;
     }
-/*
-    function counterProposal(address _owner, uint proposalId, string _title, string _what, string _when) public returns (uint counterId) {
-        uint nextId = proposals.length;
 
-        proposals.push(LetsMeetProposal({id: nextId, owner: _owner, yayVotes: 1, nayVotes: 0}));
-        counters[proposalId].push(nextId);
+    function counterProposal(uint256 proposalId, string _what, string _when) public returns (uint256 counterId) {
+        LetsMeetProposal storage proposal = proposals[proposalId-1];
+        counterId = newProposal(_what, _when);
+        proposal.counterIds.push(counterId);
 
-        ownerProposalCounts[_owner] = ownerProposalCounts[_owner] + 1;
-
-        return nextId;
+        return counterId;
     }
-*/
+
+    function voteYes(uint256 proposalId) public {
+        proposals[proposalId-1].yayVotes += 1;
+    }
+
+    function voteNo(uint256 proposalId) public {
+        proposals[proposalId-1].nayVotes += 1;
+    }
+
+    function getScore(uint256 proposalId) public constant returns (uint score) {
+        LetsMeetProposal storage proposal = proposals[proposalId-1];
+        return proposal.yayVotes - proposal.nayVotes - proposal.counterIds.length;
+    }
+
+    function getNumCounters(uint256 proposalId) public constant returns (uint256 numCounters) {
+        return proposals[proposalId-1].counterIds.length;
+    }
+
     /** recursively searches the best proposal rooted at this proposal */
-/*
-    function bestProposal(address _proposal) public returns(address) {
-        LetsMeetProposal storage proposal = LetsMeetProposal(_proposal);
-        uint numCounters = proposal.getNumCounters();
-        uint myScore = proposal.getScore();
+    function bestProposal(uint256 proposalId) public returns(uint256 bestProposalId, uint bestScore) {
+        LetsMeetProposal storage proposal = proposals[proposalId-1];
+        uint numCounters = proposal.counterIds.length;
+        uint myScore = getScore(proposalId);
 
         // base case
         if (numCounters == 0) {
             if (myScore > 0) {
-                return _proposal;
+                return (proposalId, myScore);
             } else {
-                return 0;
+                return (0, 0);
             }
         }
 
-        uint bestScore = myScore;
-        address bestCounter = _proposal;
+        bestScore = myScore;
+        bestProposalId = proposalId;
+
+        uint256 counterId;
+        uint256 winnerId;
+        uint score;
 
         for (uint i = 0; i < numCounters; i++) {
-            address counter = proposal.getCounterAddress(i);
-            address winner = bestProposal(counter);
+            counterId = proposal.counterIds[i];
+            (winnerId, score) = bestProposal(counterId);
 
-            uint score = LetsMeetProposal(winner).getScore();
             if (score > bestScore) {
-                bestCounter = winner;
+                bestProposalId = winnerId;
                 bestScore = score;
             }
         }
 
         if (myScore >= bestScore) {
-            return _proposal;
-        } else {
-            return bestCounter;
+            bestProposalId = proposalId;
+            bestScore = myScore;
         }
-    }
-    */
-}
-/*
-contract LetsMeetProposal {
-    string title;
-    string what;
-    string when;
 
-    address owner;
-    address[] public counters;
-    address[] yayVotes;
-    address[] nayVotes;
-
-    function LetsMeetProposal(address _owner, string _title, string _what, string _when) public {
-//        title = _title;
-//        owner = _owner;
-//        what = _what;
-//        when = _when;
-
- //        yayVotes.push(_owner);
-    }
-
-    function setTitle(string _title) public {
-        title = _title;
-    }
-
-    function getCounterAddress(uint idx) public view returns (address) {
-        if (idx >= counters.length) {
-            return 0;
-        } else {
-            return counters[idx];
-        }
-    }
-
-    function accept() public {
-        yayVotes.push(msg.sender);
-    }
-
-    function reject() public {
-        nayVotes.push(msg.sender);
-    }
-
-    function counter(address counterProposal) public {
-        counters.push(counterProposal);
-    }
-
-    function getNumCounters() public constant returns (uint) {
-        return counters.length;
-    }
-
-    function getScore() public constant returns (uint) {
-        return yayVotes.length - nayVotes.length - counters.length;
+        return (bestProposalId, bestScore);
     }
 }
-*/
