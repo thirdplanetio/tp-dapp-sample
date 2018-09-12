@@ -6,9 +6,11 @@ Author: [Fairiz Azizi](https://github.com/coderfi)
 
 # Prerequisites
 
+Note: You may also consider [tp-eth-hello](https://github.com/thirdplanetio/tp-eth-hello), which will guide you in setting up your development environment.
+
 ## npm
 
-Follow [installation instructions](https://www.npmjs.com/get-npm) for your OS.
+Follow the [installation instructions](https://www.npmjs.com/get-npm) for your OS.
 
 Then, for best practice purposes, update your `node` global installation prefix
 
@@ -36,6 +38,14 @@ Then, for best practice purposes, update your `node` global installation prefix
 
 # Typical Development Workflow
 
+## Install `nodejs` dependencies
+
+The following command will install nodejs packages into the `node_modules/` subdirectory.
+
+These packages are defined as dependencies in the `package.json` file.
+
+    npm install .
+    
 ## Start ganache
 
 This is a local Ethereum client node.
@@ -105,6 +115,7 @@ The browser should refresh automatically.
 
 # References
 
+* [tp-eth-hello](https://github.com/thirdplanetio/tp-eth-hello) Ethereum HelloWorld smart contract tutorial
 * [web3.js v1.0.0-beta.34](https://github.com/ethereum/web3.js/tree/v1.0.0-beta.34)
 * [React Web3](https://www.npmjs.com/package/react-web3)
 * [Solidity v0.4.24](https://solidity.readthedocs.io/en/v0.4.24)
